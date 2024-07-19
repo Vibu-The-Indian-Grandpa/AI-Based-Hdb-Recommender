@@ -14,8 +14,7 @@ import pandas as pd
 
 import numpy as np
 # create driver object
-
-options = Options() 
+options=webdriver.ChromeOptions()
 options.add_argument("start-maximized")
 options.add_argument("disable-infobars")
 options.add_argument("--disable-extensions")
