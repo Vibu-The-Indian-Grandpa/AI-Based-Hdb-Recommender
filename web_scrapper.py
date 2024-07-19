@@ -8,19 +8,23 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
+import chromedriver_autoinstaller
 import numpy as np
 import pandas as pd
 
 import numpy as np
 # create driver object
 
-options = Options()
+options = Options() 
 options.add_argument("start-maximized")
 options.add_argument("disable-infobars")
 options.add_argument("--disable-extensions")
+options.add_argument("--ignore-certificate-errors")
 options.add_experimental_option("detach", True)
 
-driver = webdriver.Chrome(options=options,service=ChromeService(ChromeDriverManager().install()))
+chromedriver_autoinstaller.install()
+
+driver = webdriver.Chrome(options=options)
 driver.get("https://homes.hdb.gov.sg/home/finding-a-flat") # link for search tool
 
 driver.find_element("xpath",'//a[@class="alert-bar-close js-alert-bar-close"]').click()
