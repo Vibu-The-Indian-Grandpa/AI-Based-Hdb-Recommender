@@ -21,9 +21,8 @@ options.add_argument("--disable-extensions")
 options.add_argument("--ignore-certificate-errors")
 options.add_experimental_option("detach", True)
 
-chromedriver_autoinstaller.install()
 
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(ChromeDriverManager().install(),options=options)
 driver.get("https://homes.hdb.gov.sg/home/finding-a-flat") # link for search tool
 
 driver.find_element("xpath",'//a[@class="alert-bar-close js-alert-bar-close"]').click()
@@ -47,6 +46,7 @@ while True:
 
 
     for i in range(0,len(listings),5):
+        print(listings)
         property_addr.append(listings[i+1])
         flat_type_list.append(listings[i+2].split(":")[1].strip())
         floor_area_list.append(listings[i+3].split(":")[1].strip())
