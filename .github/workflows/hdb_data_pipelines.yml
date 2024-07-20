@@ -18,11 +18,10 @@ jobs:
           python-version: '3.11' # install the python version needed  
           
 
-      - name: Installing package list
-        run: apt list --installed  
-        
-      - name: Removing previous chrome instances on runner 
-        run: sudo apt purge google-chrome-stable  
+      - name: Install Google Chrome # Using shell script to install Google Chrome
+        run: |
+          chmod +x chrome_installation.sh.txt
+          bash chrome_installation.sh.txt
         
 
       - name: install python packages
