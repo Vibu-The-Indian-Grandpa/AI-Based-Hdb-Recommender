@@ -16,22 +16,30 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11' # install the python version needed  
-          
       - name: Install Chrome
         run: |
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install ./google-chrome-stable_current_amd64.deb
-          sudo apt install -f
-          google-chrome --version
+              wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+              sudo apt install -y ./google-chrome-stable_current_amd64.deb
+              sudo apt install -f
+              google-chrome --version
 
       - name: Install Matching ChromeDriver
         run: |
+          set -e
           CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%.*})
-          wget https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
+          echo "Detected Chrome version: $CHROME_VERSION"
+          
+          MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1-3)
+          echo "Major Chrome version: $MAJOR_VERSION"
+          
+          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${MAJOR_VERSION})
+          echo "Matching ChromeDriver version: $CHROMEDRIVER_VERSION"
+          
+          wget -N https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
+          sudo chmod +x /usr/local/bin/chromedriver          
+
           
 
       - name: install python packages
