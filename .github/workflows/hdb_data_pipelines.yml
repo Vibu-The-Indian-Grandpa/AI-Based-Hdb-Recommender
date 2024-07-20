@@ -21,7 +21,7 @@ jobs:
       - name: Install Google Chrome # Using shell script to install Google Chrome
         run: |
           chmod +x chrome_installation.sh.txt
-          chrome_installation.sh.txt
+          bash chrome_installation.sh.txt
         
 
       - name: install python packages
