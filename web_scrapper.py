@@ -22,7 +22,7 @@ options.add_argument("--ignore-certificate-errors")
 options.add_experimental_option("detach", True)
 
 
-driver = webdriver.Chrome(ChromeDriverManager().install(),options=options)
+driver = webdriver.Chrome(options=options,service=ChromeService(chromedriver_autoinstaller.install()))
 driver.get("https://homes.hdb.gov.sg/home/finding-a-flat") # link for search tool
 
 driver.find_element("xpath",'//a[@class="alert-bar-close js-alert-bar-close"]').click()
