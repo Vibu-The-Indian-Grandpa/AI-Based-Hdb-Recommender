@@ -18,10 +18,19 @@ jobs:
           python-version: '3.11' # install the python version needed  
           
 
-      - name: Install Google Chrome # Using shell script to install Google Chrome
+      - name: Install Chrome
         run: |
-          chmod +x chrome_installation.sh.txt
-          bash chrome_installation.sh.txt
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install ./google-chrome-stable_current_amd64.deb
+          sudo apt install -f
+
+      - name: Install ChromeDriver
+        run: |
+          CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          wget https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
         
 
       - name: install python packages
