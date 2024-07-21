@@ -16,13 +16,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11' # install the python version needed  
-     
-      - name: install chrome 
-      - uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 120
-          install-chromedriver: true         
-
+    
           
 
       - name: install python packages
