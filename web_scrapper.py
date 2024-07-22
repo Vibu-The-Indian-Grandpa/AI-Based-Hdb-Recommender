@@ -13,6 +13,20 @@ import numpy as np
 import pandas as pd
 
 import numpy as np
+
+
+
+class TextNotEmpty:
+    def __init__(self, locator):
+        self.locator = locator
+
+    def __call__(self, driver):
+        element = driver.find_elements(*self.locator)[3]
+        print("from wait class:" , element.text)
+        return element if element.text.strip() != "" else False
+    
+    
+    
 # create driver object
 options=webdriver.ChromeOptions()
 options.add_argument("--no-sandbox")
@@ -47,8 +61,8 @@ while True:
 
     web_frame=driver.find_elements("xpath",'//div[@class="row"]')[3]   
     listings = web_frame.text.split("\n")
-    print("Listings before loop:", listings)
-    print("Length of listings before loop:", len(listings)/5)
+    # print("Listings before loop:", listings)
+    # print("Length of listings before loop:", len(listings)/5)
 
     if len(listings)>1:
         for i in range(0,len(listings),5):
@@ -66,7 +80,8 @@ while True:
             wait = WebDriverWait(driver, 600)  # Adjust the timeout as needed
 
             # Wait until the specific element is present
-            web_frame = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[@class="row"]')))[3]
+            locator = (By.XPATH, '//div[@class="row"]')
+            web_frame = wait.until(TextNotEmpty(locator))
 
             listings = web_frame.text.split("\n")
             for i in range(0,len(listings),5):
