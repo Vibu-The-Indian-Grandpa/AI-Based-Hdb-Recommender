@@ -62,7 +62,8 @@ while True:
     
         driver.execute_script("return arguments[0].scrollIntoView(true);", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//a[@aria-label='Next']"))))
         if page==1:
-            WebDriverWait(driver,900)
+            
+            driver.implicitly_wait(600)
             web_frame=driver.find_elements("xpath",'//div[@class="row"]')[3]  
             listings = web_frame.text.split("\n")
             for i in range(0,len(listings),5):
