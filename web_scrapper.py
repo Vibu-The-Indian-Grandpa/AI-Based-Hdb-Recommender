@@ -17,50 +17,66 @@ import numpy as np
 options=webdriver.ChromeOptions()
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
-options.add_argument("start-maximized")
 options.add_argument("disable-infobars")
 options.add_argument("--disable-extensions")
 options.add_argument("--ignore-certificate-errors")
-options.add_argument('--headless')
-options.add_experimental_option("detach", True)
+# options.add_argument("--window-size=1920,1080")
+options.add_argument("--headless")
+#options.add_experimental_option("detach", True)
 
 
-driver = webdriver.Chrome(options=options)
+#
+service=ChromeService(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service,options=options)
 driver.get("https://homes.hdb.gov.sg/home/finding-a-flat") # link for search tool
 
-driver.find_element("xpath",'//a[@class="alert-bar-close js-alert-bar-close"]').click()
+#driver.find_element("xpath",'//a[@class="alert-bar-close js-alert-bar-close"]').click()
 driver.find_element("xpath",'//div[@class="row"]').find_element("xpath",'//app-flat-cards-categories[@class="col-12 col-sm-6 col-xl-4"]').click()
-driver.implicitly_wait(10)
-select = Select(driver.find_element("xpath",'//div[@class="col-12 new-flat-title"]').find_element("xpath",'//select[@aria-label="sortByResult"]'))
-select.select_by_visible_text('50')
+# select = Select(driver.find_element("xpath",'//div[@class="col-12 new-flat-title"]').find_element("xpath",'//select[@aria-label="sortByResult"]'))
+# select.select_by_visible_text('50')
+
 
 
 property_addr=[]
 flat_type_list=[]
 floor_area_list=[]
 resale_price_list=[]
-
+all_prop_list=[]
+page=1
 while True:
 
-    
-    web_frame=driver.find_elements("xpath",'//div[@class="row"]')[4]
-    listings=web_frame.text.split("\n")
+    web_frame=driver.find_elements("xpath",'//div[@class="row"]')[3]   
+    listings = web_frame.text.split("\n")
+    print("Listings before loop:", listings)
+    print("Length of listings before loop:", len(listings)/5)
 
+    if len(listings)>1:
+        for i in range(0,len(listings),5):
+            property_addr.append(listings[i+1])
+            flat_type_list.append(listings[i+2].split(":")[1].strip())
+            floor_area_list.append(listings[i+3].split(":")[1].strip())
+            resale_price_list.append(listings[i+4])
+    all_prop_list.append(listings)
 
-
-    for i in range(0,len(listings),5):
-        print(listings)
-        property_addr.append(listings[i+1])
-        flat_type_list.append(listings[i+2].split(":")[1].strip())
-        floor_area_list.append(listings[i+3].split(":")[1].strip())
-        resale_price_list.append(listings[i+4])
-    
- 
     try:
     
         driver.execute_script("return arguments[0].scrollIntoView(true);", WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//a[@aria-label='Next']"))))
+        if page==1:
+            WebDriverWait(driver,600)
+            web_frame=driver.find_elements("xpath",'//div[@class="row"]')[3]  
+            listings = web_frame.text.split("\n")
+            for i in range(0,len(listings),5):
+                property_addr.append(listings[i+1])
+                flat_type_list.append(listings[i+2].split(":")[1].strip())
+                floor_area_list.append(listings[i+3].split(":")[1].strip())
+                resale_price_list.append(listings[i+4])
+            
+            
         driver.find_element("xpath","//a[@aria-label='Next']").click()
+   
+        page+=1
         print("Navigating to Next Page")
+        
         
     except (TimeoutException, WebDriverException) as e:
         print("Last page reached")
