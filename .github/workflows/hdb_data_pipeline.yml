@@ -32,3 +32,10 @@ jobs:
 
       - name: execute py script # run web_scrapper.py
         run: python web_scrapper.py
+        
+      - name: Commit report
+        run: |
+          git config --global user.name 'Vibu'
+          git config --global user.email 'Vibu@users.noreply.github.com'
+          git commit -am "Automated report"
+          git push
